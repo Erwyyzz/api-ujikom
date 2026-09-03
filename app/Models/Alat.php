@@ -9,9 +9,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Alat extends Model
 {
     protected $table = 'alat';
-    protected $fillable = [
-        'kategori_id', 'nama_alat', 'stok', 'status_kondisi', 'deskripsi', 'gambar'
-    ];
+protected $fillable = [
+    'kategori_id',
+    'nama_alat',
+    'stok',
+    'kondisi', 
+    'deskripsi', 
+    'gambar'
+];
 
     protected function casts(): array
     {

@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
         'name',
@@ -29,7 +30,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password' => 'hashed',     //laravel otomatis meng hash teks apapun yang masuk ke proprti password
         ];
     }
 
@@ -49,5 +50,10 @@ class User extends Authenticatable
     public function logAktivitas()
     {
         return $this->hasMany(LogAktivitas::class);
+    }
+
+    public function scopeTersedia($query)
+    {
+        return $query->where('stok', '>', 0)->where('status_kondisi', 'Baik');
     }
 }

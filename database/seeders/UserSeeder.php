@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'name' => 'Erwin Setiawan',  //pak bagus
+                'name' => 'Bagus Karim', 
                 'email' => 'admin@gmail.com',
                 'password' => Hash::make('password123'),
                 'role' => 'admin',
@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
                 'alamat' => 'Bandung, West Java',
             ],
             [
-                'name' => 'Zeykhana',  //pak arif
+                'name' => 'Arif Furqon',
                 'email' => 'petugas@gmail.com',
                 'password' => Hash::make('password123'),
                 'role' => 'petugas',
@@ -28,16 +28,16 @@ class UserSeeder extends Seeder
                 'alamat' => 'Baleendah, Bandung',
             ],
             [
-                'name' => 'Ryo Ramadhan', //rian
-                'email' => 'ryo@gmail.com',
+                'name' => 'Rian Ramadhan', 
+                'email' => 'rian@gmail.com',
                 'password' => Hash::make('password123'),
                 'role' => 'peminjam',
                 'no_hp' => '083456789012',
                 'alamat' => 'Ciparay, Bandung',
             ],
             [
-                'name' => 'Pasya Zulfahmi',  //siti
-                'email' => 'pasya@gmail.com',
+                'name' => 'Siti Zulfahmi',  
+                'email' => 'siti@gmail.com',
                 'password' => Hash::make('password123'),
                 'role' => 'peminjam',
                 'no_hp' => '084567890123',
