@@ -20,7 +20,7 @@
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-semibold mb-2">Pilih Peminjaman</label>
             <select name="peminjaman_id" id="peminjaman_id" required 
-                class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E07A5F] focus:border-transparent"
                 onchange="updateDendaInfo()">
                 <option value="">-- Pilih Peminjaman --</option>
                 @foreach($peminjamans as $peminjaman)
@@ -43,7 +43,7 @@
 
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-semibold mb-2">Kondisi Kembali</label>
-            <select name="kondisi_kembali" required class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+            <select name="kondisi_kembali" required class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E07A5F] focus:border-transparent">
                 <option value="baik" {{ old('kondisi_kembali') == 'baik' ? 'selected' : '' }}>Baik</option>
                 <option value="rusak" {{ old('kondisi_kembali') == 'rusak' ? 'selected' : '' }}>Rusak</option>
                 <option value="perbaikan" {{ old('kondisi_kembali') == 'perbaikan' ? 'selected' : '' }}>Perbaikan</option>
@@ -54,7 +54,7 @@
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-semibold mb-2">Denda Tambahan (Jika Rusak/Perbaikan)</label>
             <input type="number" name="denda_tambahan" value="{{ old('denda_tambahan', 0) }}" min="0"
-                class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E07A5F] focus:border-transparent">
             <p class="text-xs text-gray-400 mt-1">Isi jika kondisi barang rusak atau perlu perbaikan</p>
             @error('denda_tambahan') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
         </div>
@@ -63,7 +63,7 @@
             <a href="{{ route('admin.pengembalian.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2">
                 <i class="fas fa-times"></i> Batal
             </a>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2">
+            <button type="submit" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-4 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2">
                 <i class="fas fa-save"></i> Proses Pengembalian
             </button>
         </div>

@@ -9,17 +9,50 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f1f5f9; }
-        .sidebar-link { transition: all 0.2s ease; }
-        .sidebar-link:hover { transform: translateX(4px); }
-        .sidebar-link.active { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
-        .user-avatar { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
-        .card-hover { transition: all 0.2s ease; }
-        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F8F4F0;
+        }
+        .sidebar {
+            transition: all 0.3s ease;
+            background: #1E3A5F;
+            color: white;
+        }
+        .sidebar-link {
+            transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .sidebar-link:hover {
+            transform: translateX(4px);
+            color: white;
+            background: rgba(224, 122, 95, 0.2);
+        }
+        .sidebar-link.active {
+            background: linear-gradient(135deg, #E07A5F, #D96A4F);
+            color: white;
+            box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3);
+        }
+        .card-hover {
+            transition: all 0.2s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        .user-avatar {
+            background: linear-gradient(135deg, #E07A5F, #F4A261);
+        }
+        .btn-primary {
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3);
+        }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-thumb { background: #E07A5F; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #D96A4F; }
     </style>
 </head>
 <body>
@@ -27,9 +60,9 @@
     <aside class="w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm hidden md:flex">
         <div class="p-5 border-b border-gray-100">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-100">
-                    <i class="fas fa-user text-white text-lg"></i>
-                </div>
+                <div class="w-10 h-10 bg-gradient-to-br from-[#E07A5F] to-[#F4A261] rounded-xl flex items-center justify-center shadow-lg shadow-[#E07A5F]/30">
+                <i class="fas fa-user text-white text-lg"></i>
+            </div>
                 <div>
                     <h1 class="text-lg font-bold text-gray-800 tracking-tight">AlatKu</h1>
                     <p class="text-xs text-gray-400">Sistem Peminjaman Alat</p>

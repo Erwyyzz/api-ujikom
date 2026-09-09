@@ -5,13 +5,14 @@
 
 @section('content')
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+
     <!-- Filter Laporan -->
-    <div class="mb-6">
-        <h4 class="text-sm font-semibold text-gray-700 mb-3">Filter Laporan</h4>
-        <form action="{{ route('petugas.laporan') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="mb-3">
+        <h4 class="text-sm font-semibold text-gray-700 mb-2">Filter Laporan</h4>
+        <form action="{{ route('petugas.laporan') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-2">
             <div>
                 <label class="block text-xs text-gray-500 mb-1">Status Peminjaman</label>
-                <select name="status" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <select name="status" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E07A5F]">
                     <option value="">Semua Status</option>
                     <option value="diajukan" {{ request('status') == 'diajukan' ? 'selected' : '' }}>Diajukan</option>
                     <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
@@ -22,23 +23,23 @@
             <div>
                 <label class="block text-xs text-gray-500 mb-1">Dari Tanggal (Pinjam)</label>
                 <input type="date" name="start_date" value="{{ request('start_date') }}"
-                    class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E07A5F]">
             </div>
             <div>
                 <label class="block text-xs text-gray-500 mb-1">Sampai Tanggal (Pinjam)</label>
                 <input type="date" name="end_date" value="{{ request('end_date') }}"
-                    class="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E07A5F]">
             </div>
-            <div class="flex items-end gap-2">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
-                    <i class="fas fa-filter mr-1"></i> Filter
+            <div class="flex flex-wrap items-center gap-1">
+                <button type="submit" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap">
+                    <i class="fas fa-filter mr-0.5"></i> Filter
                 </button>
-                <a href="{{ route('petugas.laporan') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-xl text-sm font-semibold transition">
-                    <i class="fas fa-undo"></i>
+                <a href="{{ route('petugas.laporan') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap">
+                    <i class="fas fa-undo"></i> Reset
                 </a>
                 <a href="{{ route('petugas.laporan.cetak') }}?status={{ request('status') }}&start_date={{ request('start_date') }}&end_date={{ request('end_date') }}" 
-                   class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
-                    <i class="fas fa-file-pdf mr-1"></i> Cetak PDF
+                class="bg-green-600 hover:bg-green-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap">
+                    <i class="fas fa-file-pdf mr-0.5"></i> PDF
                 </a>
             </div>
         </form>

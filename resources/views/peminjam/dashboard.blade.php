@@ -23,10 +23,10 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-400 font-medium">Sedang Dipinjam</p>
-                <p class="text-2xl font-bold text-blue-600 mt-1">{{ $totalDipinjam }}</p>
+                <p class="text-2xl font-bold text-[#E07A5F] mt-1">{{ $totalDipinjam }}</p>
             </div>
             <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <i class="fas fa-hand-holding text-blue-600 text-xl"></i>
+                <i class="fas fa-hand-holding text-[#E07A5F] text-xl"></i>
             </div>
         </div>
     </div>
@@ -116,7 +116,7 @@
                 </span>
             </p>
             <a href="{{ route('peminjam.peminjaman.create', $alat->id) }}" 
-               class="mt-3 inline-block bg-blue-50/80 backdrop-blur-sm border border-blue-300/50 text-blue-700 font-semibold px-4 py-2.5 rounded-xl transition hover:bg-blue-600 hover:text-white hover:border-blue-600 w-full text-center text-sm">
+               class="mt-3 inline-block bg-blue-50/80 backdrop-blur-sm border border-blue-300/50 text-blue-700 font-semibold px-4 py-2.5 rounded-xl transition hover:bg-[#E07A5F] hover:text-white hover:border-blue-600 w-full text-center text-sm">
                 <i class="fas fa-plus-circle mr-1"></i> Ajukan Peminjaman
             </a>
         </div>
@@ -174,7 +174,7 @@
                             @if($item->status == 'dipinjam')
                                 <form action="{{ route('peminjam.kembalikan', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin mengembalikan alat ini?')">
                                     @csrf
-                                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition">
+                                    <button type="submit" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-4 py-2 rounded-lg text-xs font-semibold transition">
                                         <i class="fas fa-undo mr-1"></i> Kembalikan
                                     </button>
                                 </form>

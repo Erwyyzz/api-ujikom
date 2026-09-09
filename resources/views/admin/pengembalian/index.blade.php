@@ -25,10 +25,10 @@
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="p-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex justify-between items-center">
         <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-            <i class="fas fa-undo-alt text-blue-500"></i> Daftar Pengembalian
+            <i class="fas fa-undo-alt text-[#E07A5F]"></i> Daftar Pengembalian
             <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">{{ $pengembalians->count() }}</span>
         </h3>
-        <a href="{{ route('admin.pengembalian.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm shadow-blue-100 flex items-center gap-2">
+        <a href="{{ route('admin.pengembalian.create') }}" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm shadow-blue-100 flex items-center gap-2">
             <i class="fas fa-plus"></i> Proses Pengembalian
         </a>
     </div>

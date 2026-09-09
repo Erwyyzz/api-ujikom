@@ -13,20 +13,26 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background: #F8F4F0;
         }
         .sidebar {
             transition: all 0.3s ease;
+            background: #1E3A5F;
+            color: white;
         }
         .sidebar-link {
             transition: all 0.2s ease;
+            color: rgba(255, 255, 255, 0.6);
         }
         .sidebar-link:hover {
             transform: translateX(4px);
+            color: white;
+            background: rgba(224, 122, 95, 0.2);
         }
         .sidebar-link.active {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            background: linear-gradient(135deg, #E07A5F, #D96A4F);
             color: white;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3);
         }
         .card-hover {
             transition: all 0.2s ease;
@@ -52,10 +58,10 @@
         }
         .btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(224, 122, 95, 0.25);
         }
         .user-avatar {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            background: linear-gradient(135deg, 135deg, #E07A5F, #F4A261);
         }
         ::-webkit-scrollbar {
             width: 6px;
@@ -66,17 +72,17 @@
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: #E07A5F;
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: #D96A4F;
         }
 
         .sidebar-link.active {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            background: linear-gradient(135deg, #E07A5F, #D96A4F);
             color: white;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3);
         }
 
         .btn-primary {
@@ -84,7 +90,7 @@
         }
         .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px #D96A4F;
         }
     </style>
 </head>
@@ -97,11 +103,9 @@
         <!-- Brand -->
         <div class="p-5 border-b border-gray-100">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-100">
-                    <i class="fas fa-toolbox text-white text-lg"></i>
-                </div>
+/
                 <div>
-                    <h1 class="text-lg font-bold text-gray-800 tracking-tight">AlatKu</h1>
+                    <h1 class="text-lg font-bold text-gray-800 tracking-tight">KU-Alat</h1>
                     <p class="text-xs text-gray-400">Sistem Peminjaman Alat</p>
                 </div>
             </div>

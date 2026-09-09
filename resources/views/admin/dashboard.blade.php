@@ -33,7 +33,7 @@
                 <p class="text-2xl font-bold text-gray-800 mt-1">{{ \App\Models\Alat::count() }}</p>
             </div>
             <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <i class="fas fa-toolbox text-blue-600 text-xl"></i>
+                <i class="fas fa-toolbox text-[#E07A5F] text-xl"></i>
             </div>
         </div>
     </div>
@@ -79,7 +79,7 @@
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex items-center justify-between">
         <h3 class="text-lg font-semibold text-gray-800">
-            <i class="fas fa-history mr-2 text-blue-500"></i> Log Aktivitas Terbaru
+            <i class="fas fa-history mr-2 text-[#E07A5F]"></i> Log Aktivitas Terbaru
         </h3>
         <span class="text-xs text-gray-400 bg-gray-200 px-3 py-1 rounded-full">10 terakhir</span>
     </div>
@@ -100,7 +100,7 @@
                     </td>
                     <td class="py-3 px-4 font-medium text-gray-800">
                         <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xs font-bold">
+                            <div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-[#E07A5F] text-xs font-bold">
                                 {{ substr($log->user->name ?? 'U', 0, 1) }}
                             </div>
                             {{ $log->user->name ?? 'Sistem' }}

@@ -21,20 +21,20 @@
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="p-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex flex-wrap items-center justify-between gap-3">
         <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-            <i class="fas fa-tags text-blue-500"></i> Daftar Kategori
+            <i class="fas fa-tags text-[#E07A5F]"></i> Daftar Kategori
             <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">{{ $kategoris->total() }}</span>
         </h3>
         <div class="flex flex-wrap items-center gap-3">
             <form action="{{ route('admin.kategori.index') }}" method="GET" class="flex w-full md:w-64">
                 <input type="text" name="search" value="{{ request('search') }}" 
                     placeholder="Cari nama kategori..." 
-                    class="w-full px-3 py-2 text-sm border border-gray-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-semibold rounded-r-xl transition">
+                    class="w-full px-3 py-2 text-sm border border-gray-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-[#E07A5F] focus:border-transparent">
+                <button type="submit" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-4 py-2 text-sm font-semibold rounded-r-xl transition">
                     <i class="fas fa-search"></i>
                 </button>
             </form>
             
-            <a href="{{ route('admin.kategori.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm shadow-blue-100 flex items-center gap-2">
+            <a href="{{ route('admin.kategori.create') }}" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm shadow-blue-100 flex items-center gap-2">
                 <i class="fas fa-plus"></i> Tambah Kategori
             </a>
         </div>
@@ -85,7 +85,7 @@
 
 <!-- Pagination -->
 <div class="p-4 border-t border-gray-100 bg-gray-50/50 flex justify-center">
-    {{ $users->links() }}
+    {{ $kategoris->links() }}
 </div>
 </div>
 @endsection

@@ -31,8 +31,8 @@
         <form action="{{ route('petugas.peminjaman.index') }}" method="GET" class="flex w-full md:w-64">
             <input type="text" name="search" value="{{ request('search') }}" 
                 placeholder="Cari nama peminjam..." 
-                class="w-full px-3 py-2 text-sm border border-gray-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-semibold rounded-r-xl transition">
+                class="w-full px-3 py-2 text-sm border border-gray-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-[#E07A5F] focus:border-transparent">
+            <button type="submit" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-4 py-2 text-sm font-semibold rounded-r-xl transition">
                 <i class="fas fa-search"></i>
             </button>
             @if(request('search'))
@@ -74,7 +74,7 @@
                         <div class="flex items-center justify-center gap-2">
                             <button type="button" 
                                     onclick="openModal({{ $item->id }}, '{{ $item->user->name }}', 'setuju')" 
-                                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1">
+                                    class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1">
                                 <i class="fas fa-check"></i> Setujui
                             </button>
                             <button type="button" 

@@ -57,7 +57,7 @@
                     <td class="py-3 px-4">{{ $item->tgl_kembali_plan ?? '-' }}</td>
                     <td class="py-3 px-4 text-center">
                         <a href="{{ route('petugas.pengembalian.verifikasi', $item->id) }}" 
-                           class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition inline-block">
+                           class="bg-blue-500 hover:bg-[#E07A5F] text-white px-4 py-2 rounded-lg text-xs font-semibold transition inline-block">
                             <i class="fas fa-check-circle mr-1"></i> Verifikasi
                         </a>
                     </td>

@@ -22,10 +22,10 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm text-gray-400 font-medium">Sedang Dipinjam</p>
-                <p class="text-2xl font-bold text-blue-600 mt-1">{{ $totalDipinjam }}</p>
+                <p class="text-2xl font-bold text-[#E07A5F] mt-1">{{ $totalDipinjam }}</p>
             </div>
             <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                <i class="fas fa-hand-holding text-blue-600 text-xl"></i>
+                <i class="fas fa-hand-holding text-[#E07A5F] text-xl"></i>
             </div>
         </div>
     </div>
@@ -58,13 +58,13 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 card-hover">
         <h4 class="text-sm font-semibold text-gray-600 mb-2">⚡ Aksi Cepat</h4>
         <div class="space-y-2">
-            <a href="{{ route('petugas.peminjaman.index') }}" class="block text-sm text-blue-600 hover:text-blue-800 transition">
+            <a href="{{ route('petugas.peminjaman.index') }}" class="block text-sm text-[#E07A5F] hover:text-blue-800 transition">
                 <i class="fas fa-arrow-right mr-2"></i> Lihat pengajuan peminjaman
             </a>
-            <a href="{{ route('petugas.pengembalian.index') }}" class="block text-sm text-blue-600 hover:text-blue-800 transition">
+            <a href="{{ route('petugas.pengembalian.index') }}" class="block text-sm text-[#E07A5F] hover:text-blue-800 transition">
                 <i class="fas fa-arrow-right mr-2"></i> Lihat riwayat pengembalian
             </a>
-            <a href="{{ route('petugas.laporan') }}" class="block text-sm text-blue-600 hover:text-blue-800 transition">
+            <a href="{{ route('petugas.laporan') }}" class="block text-sm text-[#E07A5F] hover:text-blue-800 transition">
                 <i class="fas fa-arrow-right mr-2"></i> Cetak laporan peminjaman
             </a>
         </div>
