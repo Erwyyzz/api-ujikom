@@ -12,7 +12,7 @@
         <form action="{{ route('petugas.laporan') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-2">
             <div>
                 <label class="block text-xs text-gray-500 mb-1">Status Peminjaman</label>
-                <select name="status" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E07A5F]">
+                <select name="status" class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
                     <option value="">Semua Status</option>
                     <option value="diajukan" {{ request('status') == 'diajukan' ? 'selected' : '' }}>Diajukan</option>
                     <option value="dipinjam" {{ request('status') == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
@@ -23,15 +23,15 @@
             <div>
                 <label class="block text-xs text-gray-500 mb-1">Dari Tanggal (Pinjam)</label>
                 <input type="date" name="start_date" value="{{ request('start_date') }}"
-                    class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E07A5F]">
+                    class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
             </div>
             <div>
                 <label class="block text-xs text-gray-500 mb-1">Sampai Tanggal (Pinjam)</label>
                 <input type="date" name="end_date" value="{{ request('end_date') }}"
-                    class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E07A5F]">
+                    class="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
             </div>
             <div class="flex flex-wrap items-center gap-1">
-                <button type="submit" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap">
                     <i class="fas fa-filter mr-0.5"></i> Filter
                 </button>
                 <a href="{{ route('petugas.laporan') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition whitespace-nowrap">

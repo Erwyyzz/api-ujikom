@@ -13,11 +13,11 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: #F8F4F0;
+            background: #f1f5f9;
         }
         .sidebar {
             transition: all 0.3s ease;
-            background: #1E3A5F;
+            background: #0f172a;
             color: white;
         }
         .sidebar-link {
@@ -30,7 +30,7 @@
             background: rgba(224, 122, 95, 0.2);
         }
         .sidebar-link.active {
-            background: linear-gradient(135deg, #E07A5F, #D96A4F);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3);
         }
@@ -61,7 +61,7 @@
             box-shadow: 0 4px 12px rgba(224, 122, 95, 0.25);
         }
         .user-avatar {
-            background: linear-gradient(135deg, 135deg, #E07A5F, #F4A261);
+            background: linear-gradient(135deg, 135deg, #3b82f6, #06b6d4);
         }
         ::-webkit-scrollbar {
             width: 6px;
@@ -72,15 +72,15 @@
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #E07A5F;
+            background: #3b82f6;
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #D96A4F;
+            background: #2563eb;
         }
 
         .sidebar-link.active {
-            background: linear-gradient(135deg, #E07A5F, #D96A4F);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3);
         }
@@ -90,7 +90,7 @@
         }
         .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px #D96A4F;
+            box-shadow: 0 4px 12px #2563eb;
         }
     </style>
 </head>
@@ -103,7 +103,6 @@
         <!-- Brand -->
         <div class="p-5 border-b border-gray-100">
             <div class="flex items-center gap-3">
-/
                 <div>
                     <h1 class="text-lg font-bold text-gray-800 tracking-tight">KU-Alat</h1>
                     <p class="text-xs text-gray-400">Sistem Peminjaman Alat</p>

@@ -21,7 +21,7 @@
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="p-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex flex-col md:flex-row justify-between items-center gap-4">
         <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
-            <i class="fas fa-hand-holding text-[#E07A5F]"></i> Daftar Transaksi Peminjaman
+            <i class="fas fa-hand-holding text-blue-600"></i> Daftar Transaksi Peminjaman
             <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">{{ $peminjaman->total() }}</span>
         </h3>
         
@@ -29,8 +29,8 @@
             <form action="{{ route('admin.peminjaman.index') }}" method="GET" class="flex w-full md:w-64">
                 <input type="text" name="search" value="{{ request('search') }}" 
                     placeholder="Cari peminjam / status..." 
-                    class="w-full px-3 py-2 text-sm border border-gray-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-[#E07A5F] focus:border-transparent">
-                <button type="submit" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-4 py-2 text-sm font-semibold rounded-r-xl transition">
+                    class="w-full px-3 py-2 text-sm border border-gray-200 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-sm font-semibold rounded-r-xl transition">
                     <i class="fas fa-search"></i>
                 </button>
                 @if(request('search'))
@@ -40,14 +40,14 @@
                 @endif
             </form>
 
-            <a href="{{ route('admin.peminjaman.create') }}" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm shadow-blue-100 flex items-center gap-2 whitespace-nowrap">
+            <a href="{{ route('admin.peminjaman.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm shadow-blue-100 flex items-center gap-2 whitespace-nowrap">
                 <i class="fas fa-plus"></i> Tambah Peminjaman
             </a>
         </div>
     </div>
 <!-- 
     <div class="p-4">
-        <a href="{{ route('admin.peminjaman.create') }}" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm shadow-blue-100 flex items-center gap-2 w-fit">
+        <a href="{{ route('admin.peminjaman.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-sm shadow-blue-100 flex items-center gap-2 w-fit">
             <i class="fas fa-plus"></i> Tambah Peminjaman
         </a>
     </div> -->
@@ -100,7 +100,7 @@
                                 <form action="{{ route('admin.peminjaman.updateStatus', $item->id) }}" method="POST">
                                     @csrf
                                     @method('PUT')
-                                    <select name="status" onchange="this.form.submit()" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#E07A5F] bg-gray-50 hover:bg-gray-100 transition">
+                                    <select name="status" onchange="this.form.submit()" class="text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50 hover:bg-gray-100 transition">
                                         <option value="diajukan" {{ $item->status == 'diajukan' ? 'selected' : '' }}>Diajukan</option>
                                         <option value="dipinjam" {{ $item->status == 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
                                         <option value="dikembalikan" {{ $item->status == 'dikembalikan' ? 'selected' : '' }}>Dikembalikan</option>

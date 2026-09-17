@@ -49,7 +49,7 @@
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <button type="submit" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
             Update User
         </button>
         <a href="{{ route('admin.user.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold text-sm transition ml-2">

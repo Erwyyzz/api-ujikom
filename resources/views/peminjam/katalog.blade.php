@@ -24,7 +24,7 @@
             </span>
         </p>
         <a href="{{ route('peminjam.peminjaman.create', $alat->id) }}" 
-        class="mt-3 inline-block bg-blue-50/80 backdrop-blur-sm border border-blue-300/50 text-blue-700 font-semibold px-4 py-2.5 rounded-xl transition hover:bg-[#E07A5F] hover:text-white hover:border-blue-600 w-full text-center text-sm">
+        class="mt-3 inline-block bg-blue-50/80 backdrop-blur-sm border border-blue-300/50 text-blue-700 font-semibold px-4 py-2.5 rounded-xl transition hover:bg-blue-600 hover:text-white hover:border-blue-600 w-full text-center text-sm">
             <i class=""></i> Ajukan Peminjaman
         </a>
     </div>

@@ -58,7 +58,7 @@
 
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-semibold mb-2">Kondisi Kembali</label>
-            <select name="kondisi_kembali" required class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E07A5F]">
+            <select name="kondisi_kembali" required class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400">
                 <option value="baik">Baik</option>
                 <option value="rusak">Rusak</option>
                 <option value="perbaikan">Perbaikan</option>
@@ -68,13 +68,13 @@
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-semibold mb-2">Denda Tambahan (Jika Rusak/Perbaikan)</label>
             <input type="number" name="denda_tambahan" value="{{ old('denda_tambahan', 0) }}" min="0"
-                class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E07A5F]">
+                class="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400">
             <p class="text-xs text-gray-400 mt-1">Isi jika kondisi barang rusak atau perlu perbaikan</p>
         </div>
 
         <div class="flex justify-end space-x-2">
             <a href="{{ route('petugas.pengembalian.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-xl text-sm font-semibold transition">Batal</a>
-            <button type="submit" class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
                 <i class="fas fa-check mr-1"></i> Selesai Verifikasi
             </button>
         </div>

@@ -57,7 +57,7 @@
                     <td class="py-3 px-4 text-center">
                         <button type="button" 
                                 onclick="openKembalikanModal({{ $item->id }}, '{{ $item->detailPinjam->first()->alat->nama_alat ?? 'Alat' }}')" 
-                                class="bg-[#E07A5F] hover:bg-[#D96A4F] text-white px-4 py-2 rounded-lg text-xs font-semibold transition inline-block">
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition inline-block">
                             <i class="fas fa-undo mr-1"></i> Kembalikan
                         </button>
                     </td>

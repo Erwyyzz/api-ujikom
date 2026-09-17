@@ -11,11 +11,11 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: #F8F4F0;
+            background: #f1f5f9;
         }
         .sidebar {
             transition: all 0.3s ease;
-            background: #1E3A5F;
+            background: #0f172a;
             color: white;
         }
         .sidebar-link {
@@ -28,7 +28,7 @@
             background: rgba(224, 122, 95, 0.2);
         }
         .sidebar-link.active {
-            background: linear-gradient(135deg, #E07A5F, #D96A4F);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             box-shadow: 0 4px 12px rgba(224, 122, 95, 0.3);
         }
@@ -40,7 +40,7 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
         }
         .user-avatar {
-            background: linear-gradient(135deg, #E07A5F, #F4A261);
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
         }
         .btn-primary {
             transition: all 0.2s ease;
@@ -51,8 +51,8 @@
         }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #E07A5F; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #D96A4F; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2563eb; }
     </style>
 </head>
 <body>
@@ -60,7 +60,7 @@
     <aside class="w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm hidden md:flex">
         <div class="p-5 border-b border-gray-100">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-[#E07A5F] to-[#F4A261] rounded-xl flex items-center justify-center shadow-lg shadow-[#E07A5F]/30">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-100">
                 <i class="fas fa-user text-white text-lg"></i>
             </div>
                 <div>
