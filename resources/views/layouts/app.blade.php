@@ -61,7 +61,7 @@
             box-shadow: 0 4px 12px rgba(224, 122, 95, 0.25);
         }
         .user-avatar {
-            background: linear-gradient(135deg, 135deg, #3b82f6, #06b6d4);
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
         }
         ::-webkit-scrollbar {
             width: 6px;
@@ -103,6 +103,9 @@
         <!-- Brand -->
         <div class="p-5 border-b border-gray-100">
             <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-100">
+                    <i class="fas fa-toolbox text-white text-lg"></i>
+                </div>
                 <div>
                     <h1 class="text-lg font-bold text-gray-800 tracking-tight">KU-Alat</h1>
                     <p class="text-xs text-gray-400">Sistem Peminjaman Alat</p>
@@ -162,12 +165,9 @@
                     <p class="text-sm font-semibold text-gray-800 truncate">{{ auth()->user()->name ?? 'User' }}</p>
                     <p class="text-xs text-gray-400 truncate">{{ auth()->user()->email ?? '' }}</p>
                 </div>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                <button type="button" onclick="showLogoutModal()" class="text-gray-400 hover:text-red-500 transition" title="Logout">
+               <button type="button" onclick="showLogoutModal()" class="text-gray-400 hover:text-red-500 transition" title="Logout">
                     <i class="fas fa-sign-out-alt text-lg"></i>
                 </button>
-                </form>
             </div>
         </div>
     </aside>
