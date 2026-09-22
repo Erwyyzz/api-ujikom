@@ -17,7 +17,7 @@ class PeminjamController extends Controller
     public function katalogAlat()
     {
         $alats = Alat::with('kategori')->where('stok', '>', 0)->get();
-        return view('peminjam.katalog', compact('alats'));
+        return view('peminjam.dashboard', compact('alats'));
     }
 
     // Form Ajukan Peminjaman
@@ -31,6 +31,7 @@ class PeminjamController extends Controller
     // Store - Ajukan Peminjaman
     public function storePeminjaman(Request $request)
     {
+        // Validasi input
         $request->validate([
             'alat_id' => 'required|exists:alat,id',
             'jumlah' => 'required|integer|min:1',
@@ -40,13 +41,21 @@ class PeminjamController extends Controller
         DB::beginTransaction();
 
         try {
+            // Ambil data alat
             $alat = Alat::findOrFail($request->alat_id);
 
+            // ==========================================
+            // VALIDASI STOK: Kalo jumlah pinjam > stok
+            // → Kembalikan ke form + error
+            // ==========================================
             if ($alat->stok < $request->jumlah) {
-                return back()->with('error', 'Stok alat tidak mencukupi.');
+                // Kembalikan ke halaman sebelumnya + pesan error
+                return back()
+                    ->withInput() // Biar input sebelumnya ga ilang
+                    ->with('error', 'Stok alat "' . $alat->nama_alat . '" tidak mencukupi! Stok tersedia: ' . $alat->stok . ' unit, Anda minta: ' . $request->jumlah . ' unit.');
             }
 
-            // Buat peminjaman
+            // Kalo stok cukup, lanjut buat peminjaman
             $peminjaman = Peminjaman::create([
                 'user_id' => auth()->id(),
                 'tgl_pinjam' => now(),
@@ -54,13 +63,14 @@ class PeminjamController extends Controller
                 'status' => 'diajukan',
             ]);
 
-            // Detail peminjaman
+            // Simpan detail peminjaman
             DetailPinjam::create([
                 'peminjaman_id' => $peminjaman->id,
                 'alat_id' => $request->alat_id,
                 'jumlah' => $request->jumlah,
             ]);
 
+            // Catat log aktivitas
             LogAktivitas::create([
                 'user_id' => auth()->id(),
                 'aktivitas' => 'Mengajukan peminjaman alat: ' . $alat->nama_alat . ' (' . $request->jumlah . ' unit)',

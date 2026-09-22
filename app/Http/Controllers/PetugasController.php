@@ -50,32 +50,47 @@ class PetugasController extends Controller
         DB::beginTransaction();
 
         try {
-            $peminjaman = Peminjaman::with('detailPinjam')->findOrFail($id);
+            // Ambil peminjaman + detail pinjam
+            $peminjaman = Peminjaman::with('detailPinjam.alat')->findOrFail($id);
 
+            // Cek status peminjaman
             if ($peminjaman->status != 'diajukan') {
                 return back()->with('error', 'Peminjaman sudah diproses.');
             }
 
-            // Cek stok
+            // ==========================================
+            // VALIDASI STOK: Cek semua alat yang dipinjam
+            // ==========================================
             foreach ($peminjaman->detailPinjam as $detail) {
                 $alat = Alat::findOrFail($detail->alat_id);
+
+                // Kalo stok alat kurang dari yang dipinjam
                 if ($alat->stok < $detail->jumlah) {
-                    return back()->with('error', "Stok {$alat->nama_alat} tidak mencukupi.");
+                    // Kembalikan ke halaman + notif error
+                    return back()->with('error', 
+                        'Stok alat "' . $alat->nama_alat . '" tidak mencukupi! ' .
+                        'Stok tersedia: ' . $alat->stok . ' unit, ' .
+                        'sedangkan yang dipinjam: ' . $detail->jumlah . ' unit.'
+                    );
                 }
             }
 
-            // Kurangi stok
+            // ==========================================
+            // Kalo stok cukup, kurangi stok alat
+            // ==========================================
             foreach ($peminjaman->detailPinjam as $detail) {
                 $alat = Alat::findOrFail($detail->alat_id);
                 $alat->stok -= $detail->jumlah;
                 $alat->save();
             }
 
+            // Update status peminjaman jadi "dipinjam"
             $peminjaman->update([
                 'status' => 'dipinjam',
                 'petugas_id' => auth()->id(),
             ]);
 
+            // Catat log aktivitas
             LogAktivitas::create([
                 'user_id' => auth()->id(),
                 'aktivitas' => 'Menyetujui peminjaman #' . $peminjaman->id,

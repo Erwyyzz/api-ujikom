@@ -6,8 +6,9 @@
 
 @section('content')
 @if(session('error'))
-    <div class="mb-4 bg-red-50 border border-red-200 text-red-800 p-4 rounded-2xl shadow-sm text-sm">
-        {{ session('error') }}
+    <div class="mb-4 bg-red-50 border border-red-200 text-red-800 p-4 rounded-2xl shadow-sm text-sm flex items-center gap-3">
+        <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
+        <span>{{ session('error') }}</span>
     </div>
 @endif
 
