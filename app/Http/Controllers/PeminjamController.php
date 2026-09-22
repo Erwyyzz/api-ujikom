@@ -206,7 +206,8 @@ class PeminjamController extends Controller
             ->get();
 
         // ===== KATALOG ALAT =====
-        $alats = Alat::with('kategori')->where('stok', '>', 0)->get();
+        // Ambil SEMUA alat (termasuk yang stok habis)
+        $alats = Alat::with('kategori')->latest()->get();
 
         // ===== PERINGATAN PENGEMBALIAN =====
         $peminjamanAktif = Peminjaman::with(['detailPinjam.alat'])
