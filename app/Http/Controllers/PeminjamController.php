@@ -23,9 +23,16 @@ class PeminjamController extends Controller
     // Form Ajukan Peminjaman
     public function createPeminjaman($alat_id = null)
     {
-        $alat = $alat_id ? Alat::findOrFail($alat_id) : null;
-        $alats = Alat::where('stok', '>', 0)->get();
-        return view('peminjam.peminjaman.create', compact('alats', 'alat'));
+        // Ambil data alat yang dipilih dari katalog
+        $alat = $alat_id ? Alat::with('kategori')->findOrFail($alat_id) : null;
+        
+        // Kalo alat ga ada, redirect balik ke dashboard
+        if (!$alat) {
+            return redirect()->route('peminjam.dashboard')
+                ->with('error', 'Silakan pilih alat terlebih dahulu dari katalog.');
+        }
+        
+        return view('peminjam.peminjaman.create', compact('alat'));
     }
 
     // Store - Ajukan Peminjaman

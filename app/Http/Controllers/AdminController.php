@@ -122,20 +122,36 @@ class AdminController extends Controller
         return redirect()->route('admin.alat.index')->with('success', 'Alat berhasil diperbarui.');
     }
 
-    // Menghapus data alat
-    public function destroyAlat($id)
-    {
-        $alat = Alat::findOrFail($id);
+// Menghapus data alat
+public function destroyAlat($id)
+{
+    $alat = Alat::findOrFail($id);
 
-        // Hapus gambar jika ada
-        if ($alat->gambar && file_exists(public_path('uploads/alats/' . $alat->gambar))) {
-            unlink(public_path('uploads/alats/' . $alat->gambar));
-        }
+    // Cek apakah alat sedang dipinjam
+    // Query: cari data di tabel detail_pinjam yang pake alat ID ini,
+    // dan peminjamannya masih status dipinjam atau menunggu_verifikasi
+    $sedangDipinjam = \App\Models\DetailPinjam::where('alat_id', $id)
+        ->whereHas('peminjaman', function ($query) {
+            $query->whereIn('status', ['dipinjam', 'menunggu_verifikasi']);
+        })
+        ->exists();
 
-        $alat->delete();
-
-        return redirect()->back()->with('success', 'Alat berhasil dihapus.');
+    // Kalo alat sedang dipinjam, tolak penghapusan
+    if ($sedangDipinjam) {
+        return redirect()->route('admin.alat.index')
+            ->with('error', 'Alat "' . $alat->nama_alat . '" tidak dapat dihapus karena sedang dipinjam oleh user!');
     }
+
+    // Hapus gambar jika ada
+    if ($alat->gambar && file_exists(public_path('uploads/alats/' . $alat->gambar))) {
+        unlink(public_path('uploads/alats/' . $alat->gambar));
+    }
+
+    // Hapus alat
+    $alat->delete();
+
+    return redirect()->back()->with('success', 'Alat berhasil dihapus.');
+}
 
     // ==================== CRUD USER ====================
 
