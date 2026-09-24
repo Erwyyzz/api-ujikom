@@ -16,13 +16,15 @@ class AuthController extends Controller
     //memproses login
     public function login(Request $request)
     {
+         // 1. Validasi input
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
+        // 2. Coba login pake Auth::attempt()
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+            $request->session()->regenerate();      // Regenerate session (keamanan)
             
             $user = Auth::user();
 
@@ -40,6 +42,7 @@ class AuthController extends Controller
             return redirect()->route('login')->with('error', 'Role pengguna tidak valid.');
         }
 
+        // 4. Kalo gagal
         return back()->withErrors([
             'email' => 'Email atau password salah.',
         ])->onlyInput('email');

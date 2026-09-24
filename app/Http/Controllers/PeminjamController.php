@@ -23,90 +23,86 @@ class PeminjamController extends Controller
     // Form Ajukan Peminjaman
     public function createPeminjaman($alat_id = null)
     {
-        // Ambil data alat yang dipilih dari katalog
+        // Ambil SEMUA alat buat dropdown (yang stok > 0)
+        $alats = Alat::with('kategori')->where('stok', '>', 0)->get();
+        
+        // Ambil alat yang dipilih dari katalog (opsional)
         $alat = $alat_id ? Alat::with('kategori')->findOrFail($alat_id) : null;
         
-        // Kalo alat ga ada, redirect balik ke dashboard
-        if (!$alat) {
-            return redirect()->route('peminjam.dashboard')
-                ->with('error', 'Silakan pilih alat terlebih dahulu dari katalog.');
-        }
-        
-        return view('peminjam.peminjaman.create', compact('alat'));
+        return view('peminjam.peminjaman.create', compact('alats', 'alat'));
     }
 
-    // Store - Ajukan Peminjaman
-    public function storePeminjaman(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'alat_id' => 'required|exists:alat,id',
-            'jumlah' => 'required|integer|min:1',
-            'tgl_kembali_plan' => 'required|date|after:today',
+ // Store - Ajukan Peminjaman (Multi-Alat)
+public function storePeminjaman(Request $request)
+{
+    // Validasi input multi-alat
+    $request->validate([
+        'tgl_kembali_plan' => 'required|date|after:today',
+        'alat_id' => 'required|array|min:1',
+        'alat_id.*' => 'required|exists:alat,id',
+        'jumlah' => 'required|array|min:1',
+        'jumlah.*' => 'required|integer|min:1',
+        'keterangan' => 'nullable|array',
+        'keterangan.*' => 'nullable|string|max:255',
+    ], [
+        'tgl_kembali_plan.after' => 'Tanggal kembali harus setelah tanggal hari ini.',
+        'alat_id.required' => 'Minimal pilih 1 alat untuk dipinjam.',
+        'alat_id.min' => 'Minimal pilih 1 alat untuk dipinjam.',
+        'jumlah.*.min' => 'Jumlah minimal 1 unit.',
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        // Validasi stok SEMUA alat dulu sebelum simpan
+        $alatIds = $request->alat_id;
+        $jumlahs = $request->jumlah;
+
+        foreach ($alatIds as $index => $alatId) {
+            $alat = Alat::findOrFail($alatId);
+            $jumlahPinjam = $jumlahs[$index];
+
+            if ($alat->stok < $jumlahPinjam) {
+                return back()
+                    ->withInput()
+                    ->with('error', 'Stok alat "' . $alat->nama_alat . '" tidak mencukupi! Stok tersedia: ' . $alat->stok . ' unit, Anda minta: ' . $jumlahPinjam . ' unit.');
+            }
+        }
+
+        // Simpan peminjaman (header)
+        $peminjaman = Peminjaman::create([
+            'user_id' => auth()->id(),
+            'tgl_pinjam' => now(),
+            'tgl_kembali_plan' => $request->tgl_kembali_plan,
+            'status' => 'diajukan',
         ]);
 
-        DB::beginTransaction();
-
-        try {
-            // Ambil data alat
-            $alat = Alat::findOrFail($request->alat_id);
-
-            // ==========================================
-            // VALIDASI STOK: Kalo jumlah pinjam > stok
-            // → Kembalikan ke form + error
-            // ==========================================
-            if ($alat->stok < $request->jumlah) {
-                // Kembalikan ke halaman sebelumnya + pesan error
-                return back()
-                    ->withInput() // Biar input sebelumnya ga ilang
-                    ->with('error', 'Stok alat "' . $alat->nama_alat . '" tidak mencukupi! Stok tersedia: ' . $alat->stok . ' unit, Anda minta: ' . $request->jumlah . ' unit.');
-            }
-
-            // Kalo stok cukup, lanjut buat peminjaman
-            $peminjaman = Peminjaman::create([
-                'user_id' => auth()->id(),
-                'tgl_pinjam' => now(),
-                'tgl_kembali_plan' => $request->tgl_kembali_plan,
-                'status' => 'diajukan',
-            ]);
-
-            // Simpan detail peminjaman
+        // Simpan detail alat (bisa banyak)
+        foreach ($alatIds as $index => $alatId) {
             DetailPinjam::create([
                 'peminjaman_id' => $peminjaman->id,
-                'alat_id' => $request->alat_id,
-                'jumlah' => $request->jumlah,
+                'alat_id' => $alatId,
+                'jumlah' => $jumlahs[$index],
+                'keterangan' => $request->keterangan[$index] ?? null,
             ]);
-
-            // Catat log aktivitas
-            LogAktivitas::create([
-                'user_id' => auth()->id(),
-                'aktivitas' => 'Mengajukan peminjaman alat: ' . $alat->nama_alat . ' (' . $request->jumlah . ' unit)',
-            ]);
-
-            DB::commit();
-
-            return redirect()->route('peminjam.riwayat')
-                ->with('success', 'Peminjaman berhasil diajukan! Menunggu persetujuan petugas.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+
+        // Catat log aktivitas
+        LogAktivitas::create([
+            'user_id' => auth()->id(),
+            'aktivitas' => 'Mengajukan peminjaman ' . count($alatIds) . ' alat (Peminjaman ID: ' . $peminjaman->id . ')',
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('peminjam.riwayat')
+            ->with('success', 'Peminjaman berhasil diajukan! Menunggu persetujuan petugas.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
-
-    // Riwayat Peminjaman (SEMUA status)
-    public function riwayatPeminjaman()
-    {
-        $riwayat = Peminjaman::with(['detailPinjam.alat', 'pengembalian'])
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->paginate(10)
-            ->onEachSide(0)
-            ->withQueryString();
-
-        return view('peminjam.riwayat', compact('riwayat'));
-    }
-
+}
     // Form Pengembalian
     public function createPengembalian($peminjaman_id)
     {

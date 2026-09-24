@@ -21,12 +21,13 @@ return Application::configure(basePath: dirname(__DIR__))
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
 
+        //yang di modul
         $middleware->alias([
             'role.admin' => IsAdmin::class,
             'role.petugas' => IsPetugas::class,
             'role.peminjam' => IsPeminjam::class,
             'role' => RoleMiddleware::class,
-            'guest' => RedirectIfAuthenticated::class, // <-- TAMBAHKAN INI
+            'guest' => RedirectIfAuthenticated::class, 
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

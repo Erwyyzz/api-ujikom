@@ -44,56 +44,50 @@ class PetugasController extends Controller
         return view('petugas.peminjaman.index', compact('peminjaman', 'search'));
     }
 
-    // Setujui Peminjaman
+    // Setujui Peminjaman (Multi-Alat)
     public function setujuPeminjaman($id)
     {
         DB::beginTransaction();
 
         try {
-            // Ambil peminjaman + detail pinjam
+            // Ambil peminjaman + detail pinjam + alat
             $peminjaman = Peminjaman::with('detailPinjam.alat')->findOrFail($id);
 
-            // Cek status peminjaman
+            // Cek status
             if ($peminjaman->status != 'diajukan') {
                 return back()->with('error', 'Peminjaman sudah diproses.');
             }
 
-            // ==========================================
-            // VALIDASI STOK: Cek semua alat yang dipinjam
-            // ==========================================
+            // Cek stok SEMUA alat dulu
             foreach ($peminjaman->detailPinjam as $detail) {
                 $alat = Alat::findOrFail($detail->alat_id);
-
-                // Kalo stok alat kurang dari yang dipinjam
+                
                 if ($alat->stok < $detail->jumlah) {
-                    // Kembalikan ke halaman + notif error
                     return back()->with('error', 
                         'Stok alat "' . $alat->nama_alat . '" tidak mencukupi! ' .
                         'Stok tersedia: ' . $alat->stok . ' unit, ' .
-                        'sedangkan yang dipinjam: ' . $detail->jumlah . ' unit.'
+                        'yang dipinjam: ' . $detail->jumlah . ' unit.'
                     );
                 }
             }
 
-            // ==========================================
-            // Kalo stok cukup, kurangi stok alat
-            // ==========================================
+            // Kalo semua stok cukup, kurangi stok semua alat
             foreach ($peminjaman->detailPinjam as $detail) {
                 $alat = Alat::findOrFail($detail->alat_id);
                 $alat->stok -= $detail->jumlah;
                 $alat->save();
             }
 
-            // Update status peminjaman jadi "dipinjam"
+            // Update status peminjaman
             $peminjaman->update([
                 'status' => 'dipinjam',
                 'petugas_id' => auth()->id(),
             ]);
 
-            // Catat log aktivitas
+            // Catat log
             LogAktivitas::create([
                 'user_id' => auth()->id(),
-                'aktivitas' => 'Menyetujui peminjaman #' . $peminjaman->id,
+                'aktivitas' => 'Menyetujui peminjaman #' . $peminjaman->id . ' (' . count($peminjaman->detailPinjam) . ' alat)',
             ]);
 
             DB::commit();
@@ -102,7 +96,7 @@ class PetugasController extends Controller
                 ->with('success', 'Peminjaman berhasil disetujui! Stok alat dikurangi.');
 
         } catch (\Exception $e) {
-            DB::rollBack();
+            DB::Rollback();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }

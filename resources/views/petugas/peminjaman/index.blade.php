@@ -62,13 +62,26 @@
                     <td class="py-3 px-4 font-medium text-gray-800">{{ $item->user->name ?? '-' }}</td>
                     <td class="py-3 px-4">{{ $item->tgl_pinjam }}</td>
                     <td class="py-3 px-4">{{ $item->tgl_kembali_plan ?? '-' }}</td>
+                    {{-- Detail Alat (Multi) --}}
                     <td class="py-3 px-4">
-                        @foreach($item->detailPinjam as $detail)
-                            <span class="inline-block bg-gray-100 text-gray-700 px-2 py-0.5 rounded-lg text-xs mr-1 mb-1">
-                                {{ $detail->alat->nama_alat ?? 'Alat' }}
-                                <span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-md text-[10px]">Jumlah: {{ $detail->jumlah }}</span>
-                            </span>
-                        @endforeach
+                        <div class="space-y-2">
+                            @foreach($item->detailPinjam as $detail)
+                                <div class="bg-gray-50 rounded-lg p-2 border border-gray-100">
+                                    <p class="font-semibold text-gray-800 text-xs">
+                                        {{ $detail->alat->nama_alat ?? 'Alat' }}
+                                        <span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[10px]">
+                                            {{ $detail->jumlah }} unit
+                                        </span>
+                                    </p>
+                                    @if($detail->keterangan)
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            <i class="fas fa-sticky-note mr-1"></i>
+                                            {{ $detail->keterangan }}
+                                        </p>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
                     </td>
                     <td class="py-3 px-4">
                         <div class="flex items-center justify-center gap-2">
