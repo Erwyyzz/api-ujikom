@@ -8,6 +8,7 @@ use App\Models\Alat;
 use App\Models\LogAktivitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -27,6 +28,9 @@ class PetugasController extends Controller
     // Index Peminjaman (yang diajukan)
     public function indexPeminjaman(Request $request)
     {
+        // Tandai menu Peminjaman udah dibaca
+        Auth::user()->update(['peminjaman_last_read_at' => now()]);
+
         $search = $request->input('search');
 
         $peminjaman = Peminjaman::with(['user', 'detailPinjam.alat'])
@@ -104,6 +108,9 @@ class PetugasController extends Controller
     // Index Pengembalian (menunggu verifikasi)
     public function indexPengembalian(Request $request)
     {
+        // Tandai menu Pengembalian udah dibaca
+        Auth::user()->update(['pengembalian_last_read_at' => now()]);
+
         $search = $request->input('search');
 
         $pengembalian = Peminjaman::with(['user', 'detailPinjam.alat'])
@@ -121,6 +128,7 @@ class PetugasController extends Controller
         return view('petugas.pengembalian.index', compact('pengembalian', 'search'));
     }
 
+     // Proses verifikasi pengembalian (per-alat)
     // Form verifikasi pengembalian
     public function verifikasiPengembalian($id)
     {
@@ -130,12 +138,15 @@ class PetugasController extends Controller
         return view('petugas.pengembalian.verifikasi', compact('peminjaman'));
     }
 
-    // Proses verifikasi pengembalian
+    // Proses verifikasi pengembalian (per-alat)
     public function prosesVerifikasiPengembalian(Request $request, $id)
     {
+        // Validasi: kondisi & denda sekarang berupa ARRAY (per-alat)
         $request->validate([
-            'kondisi_kembali' => 'required|in:baik,rusak,perbaikan',
-            'denda_tambahan' => 'nullable|integer|min:0',
+            'kondisi' => 'required|array',
+            'kondisi.*' => 'required|in:baik,rusak,perbaikan',
+            'denda_tambahan' => 'nullable|array',
+            'denda_tambahan.*' => 'nullable|integer|min:0',
         ]);
 
         DB::beginTransaction();
@@ -147,7 +158,7 @@ class PetugasController extends Controller
                 return back()->with('error', 'Peminjaman ini tidak menunggu verifikasi.');
             }
 
-            // Hitung denda telat
+            // ===== Hitung denda telat (level peminjaman, 1x) =====
             $tglKembaliPlan = Carbon::parse($peminjaman->tgl_kembali_plan)->startOfDay();
             $hariIni = Carbon::now()->startOfDay();
 
@@ -157,29 +168,57 @@ class PetugasController extends Controller
                 $dendaTelat = $selisihHari * 5000;
             }
 
-            $dendaTambahan = $request->denda_tambahan ?? 0;
-            $totalDenda = $dendaTelat + $dendaTambahan;
+            // ===== Loop per-alat: update kondisi & denda tambahan =====
+            $totalDendaTambahan = 0;
 
-            // Simpan pengembalian
+            foreach ($peminjaman->detailPinjam as $index => $detail) {
+                $dendaPerAlat = $request->denda_tambahan[$index] ?? 0;
+
+                $detail->update([
+                    'kondisi_kembali' => $request->kondisi[$index],
+                    'denda_tambahan' => $dendaPerAlat,
+                ]);
+
+                $totalDendaTambahan += $dendaPerAlat;
+            }
+
+            // ===== Total denda = denda telat + total denda tambahan =====
+            $totalDenda = $dendaTelat + $totalDendaTambahan;
+
+            // ===== Tentukan kondisi ringkasan (ambil yang paling parah) =====
+            // Prioritas: perbaikan > rusak > baik
+            $kondisiRingkasan = 'baik';
+            foreach ($peminjaman->detailPinjam as $detail) {
+                $kondisiDetail = $detail->fresh()->kondisi_kembali;
+                if ($kondisiDetail == 'perbaikan') {
+                    $kondisiRingkasan = 'perbaikan';
+                    break; // udah paling parah, stop
+                } elseif ($kondisiDetail == 'rusak') {
+                    $kondisiRingkasan = 'rusak';
+                }
+            }
+
+            // ===== Simpan pengembalian (header) =====
             Pengembalian::create([
                 'peminjaman_id' => $peminjaman->id,
                 'tgl_kembali' => now(),
-                'kondisi_kembali' => $request->kondisi_kembali,
+                'kondisi_kembali' => $kondisiRingkasan,   // ← INI YANG DITAMBAHIN
                 'denda' => $totalDenda,
                 'petugas_id' => auth()->id(),
             ]);
 
-            // Update status peminjaman
+            // ===== Update status peminjaman =====
             $statusBaru = $hariIni->greaterThan($tglKembaliPlan) ? 'telat' : 'dikembalikan';
             $peminjaman->update(['status' => $statusBaru]);
 
-            // Kembalikan stok
+            // ===== Kembalikan stok semua alat =====
             foreach ($peminjaman->detailPinjam as $detail) {
                 $alat = Alat::findOrFail($detail->alat_id);
                 $alat->stok += $detail->jumlah;
                 $alat->save();
             }
 
+            // ===== Catat log aktivitas =====
             LogAktivitas::create([
                 'user_id' => auth()->id(),
                 'aktivitas' => 'Verifikasi pengembalian peminjaman ID: ' . $peminjaman->id,
@@ -188,14 +227,13 @@ class PetugasController extends Controller
             DB::commit();
 
             return redirect()->route('petugas.pengembalian.index')
-                ->with('success', 'Pengembalian berhasil diverifikasi! Denda: Rp ' . number_format($totalDenda, 0, ',', '.'));
+                ->with('success', 'Pengembalian berhasil diverifikasi! Total denda: Rp ' . number_format($totalDenda, 0, ',', '.'));
 
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-
     // Halaman laporan (tampil data + tombol cetak)
     // Laporan dengan filter
     public function laporan(Request $request)

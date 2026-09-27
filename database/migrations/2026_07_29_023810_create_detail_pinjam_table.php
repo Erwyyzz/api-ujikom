@@ -8,17 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('detail_pinjam', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('peminjaman_id')->constrained('peminjaman')->cascadeOnDelete();
-            $table->foreignId('alat_id')->constrained('alat')->cascadeOnDelete();
-            $table->integer('jumlah');
-            $table->timestamps();
+        Schema::table('detail_pinjam', function (Blueprint $table) {
+            $table->text('keterangan')->nullable()->after('jumlah');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('detail_pinjam');
+        Schema::table('detail_pinjam', function (Blueprint $table) {
+            $table->dropColumn('keterangan');
+        });
     }
 };

@@ -9,13 +9,18 @@ class DetailPinjam extends Model
 {
     protected $table = 'detail_pinjam';
     protected $fillable = [
-        'peminjaman_id', 'alat_id', 'jumlah','keterangan'
+        'peminjaman_id',
+        'alat_id',
+        'jumlah',
+        'kondisi_kembali',
+        'denda_tambahan',
     ];
 
     protected function casts(): array
     {
         return [
             'jumlah' => 'integer',
+            'denda_tambahan' => 'integer',
         ];
     }
 

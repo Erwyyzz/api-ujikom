@@ -79,13 +79,19 @@
             <a href="{{ route('peminjam.pengembalian.index') }}" 
             class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 {{ request()->routeIs('peminjam.pengembalian.*') ? 'active' : '' }}">
                 <i class="fas fa-undo-alt w-5 text-center text-lg"></i>
-                <span>Pengembalian Alat</span>
+                <span class="flex-1">Pengembalian Alat</span>
+                @if(($badgeDipinjam ?? 0) > 0)
+                    <span class="bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{{ $badgeDipinjam }}</span>
+                @endif
             </a>
 
             <a href="{{ route('peminjam.riwayat') }}" 
             class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 {{ request()->routeIs('peminjam.riwayat') ? 'active' : '' }}">
                 <i class="fas fa-history w-5 text-center text-lg"></i>
-                <span>Riwayat</span>
+                <span class="flex-1">Riwayat</span>
+                @if(($badgeMenungguVerifikasi ?? 0) > 0)
+                    <span class="bg-yellow-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{{ $badgeMenungguVerifikasi }}</span>
+                @endif
             </a>
         </nav>
         <div class="p-4 border-t border-gray-100">

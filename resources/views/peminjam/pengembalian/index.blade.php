@@ -31,8 +31,7 @@
             <thead>
                 <tr class="bg-gray-50/80 text-gray-500 text-xs uppercase tracking-wider border-b border-gray-100">
                     <th class="py-3.5 px-4">No</th>
-                    <th class="py-3.5 px-4">Alat</th>
-                    <th class="py-3.5 px-4">Jumlah</th>
+                    <th class="py-3.5 px-4">Detail Alat</th>
                     <th class="py-3.5 px-4">Tgl Pinjam</th>
                     <th class="py-3.5 px-4">Rencana Kembali</th>
                     <th class="py-3.5 px-4 text-center">Aksi</th>
@@ -41,20 +40,27 @@
             <tbody class="text-gray-700 text-sm divide-y divide-gray-50">
                 @foreach($peminjaman as $item)
                 <tr class="hover:bg-gray-50/70 transition">
-                    <td class="py-3 px-4 font-medium text-gray-400">{{ $loop->iteration }}</td>
-                    <td class="py-3 px-4 font-medium text-gray-800">
-                        @foreach($item->detailPinjam as $detail)
-                            {{ $detail->alat->nama_alat ?? 'Alat' }}
-                        @endforeach
-                    </td>
+                    <td class="py-3 px-4 font-medium text-gray-400 align-top">{{ $loop->iteration }}</td>
+
+                    {{-- Detail Alat: setiap alat ditumpuk ke bawah dalam bentuk badge --}}
                     <td class="py-3 px-4">
-                        @foreach($item->detailPinjam as $detail)
-                            {{ $detail->jumlah }}
-                        @endforeach
+                        <div class="space-y-2">
+                            @foreach($item->detailPinjam as $detail)
+                                <div class="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-100 w-fit">
+                                    <span class="text-sm font-semibold text-gray-800">
+                                        {{ $detail->alat->nama_alat ?? 'Alat' }}
+                                    </span>
+                                    <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">
+                                        {{ $detail->jumlah }} unit
+                                    </span>
+                                </div>
+                            @endforeach
+                        </div>
                     </td>
-                    <td class="py-3 px-4">{{ $item->tgl_pinjam }}</td>
-                    <td class="py-3 px-4">{{ $item->tgl_kembali_plan ?? '-' }}</td>
-                    <td class="py-3 px-4 text-center">
+
+                    <td class="py-3 px-4 align-top">{{ $item->tgl_pinjam }}</td>
+                    <td class="py-3 px-4 align-top">{{ $item->tgl_kembali_plan ?? '-' }}</td>
+                    <td class="py-3 px-4 text-center align-top">
                         <button type="button" 
                                 onclick="openKembalikanModal({{ $item->id }}, '{{ $item->detailPinjam->first()->alat->nama_alat ?? 'Alat' }}')" 
                                 class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition inline-block">
@@ -70,6 +76,13 @@
     <div class="py-10 text-center text-gray-400">
         <i class="fas fa-check-circle text-4xl block mb-2 text-green-300"></i>
         Tidak ada alat yang sedang dipinjam.
+    </div>
+    @endif
+
+    {{-- Pagination: di LUAR modal, di DALAM card --}}
+    @if($peminjaman->hasPages())
+    <div class="p-4 border-t border-gray-100 bg-gray-50/50 flex justify-center">
+        {{ $peminjaman->links() }}
     </div>
     @endif
 </div>
@@ -97,11 +110,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Pagination -->
-<div class="p-4 border-t border-gray-100 bg-gray-50/50 flex justify-center">
-    {{ $peminjaman->links() }}
-</div>
 </div>
 
 <style>

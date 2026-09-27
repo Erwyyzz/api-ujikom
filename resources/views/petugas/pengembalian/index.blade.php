@@ -33,8 +33,7 @@
                 <tr class="bg-gray-50/80 text-gray-500 text-xs uppercase tracking-wider border-b border-gray-100">
                     <th class="py-3.5 px-4">No</th>
                     <th class="py-3.5 px-4">Peminjam</th>
-                    <th class="py-3.5 px-4">Alat</th>
-                    <th class="py-3.5 px-4">Jumlah</th>
+                    <th class="py-3.5 px-4">Detail Alat</th>
                     <th class="py-3.5 px-4">Rencana Kembali</th>
                     <th class="py-3.5 px-4 text-center">Aksi</th>
                 </tr>
@@ -42,20 +41,27 @@
             <tbody class="text-gray-700 text-sm divide-y divide-gray-50">
                 @forelse($pengembalian as $item)
                 <tr class="hover:bg-gray-50/70 transition">
-                    <td class="py-3 px-4 font-medium text-gray-400">{{ $loop->iteration }}</td>
-                    <td class="py-3 px-4 font-medium text-gray-800">{{ $item->user->name ?? '-' }}</td>
+                    <td class="py-3 px-4 font-medium text-gray-400 align-top">{{ $loop->iteration }}</td>
+                    <td class="py-3 px-4 font-medium text-gray-800 align-top">{{ $item->user->name ?? '-' }}</td>
+
+                    {{-- Detail Alat: setiap alat ditumpuk ke bawah dalam bentuk badge --}}
                     <td class="py-3 px-4">
-                        @foreach($item->detailPinjam as $detail)
-                            {{ $detail->alat->nama_alat ?? 'Alat' }}
-                        @endforeach
+                        <div class="space-y-2">
+                            @foreach($item->detailPinjam as $detail)
+                                <div class="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-100 w-fit">
+                                    <span class="text-sm font-semibold text-gray-800">
+                                        {{ $detail->alat->nama_alat ?? 'Alat' }}
+                                    </span>
+                                    <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">
+                                        {{ $detail->jumlah }} unit
+                                    </span>
+                                </div>
+                            @endforeach
+                        </div>
                     </td>
-                    <td class="py-3 px-4">
-                        @foreach($item->detailPinjam as $detail)
-                            {{ $detail->jumlah }}
-                        @endforeach
-                    </td>
-                    <td class="py-3 px-4">{{ $item->tgl_kembali_plan ?? '-' }}</td>
-                    <td class="py-3 px-4 text-center">
+
+                    <td class="py-3 px-4 align-top">{{ $item->tgl_kembali_plan ?? '-' }}</td>
+                    <td class="py-3 px-4 text-center align-top">
                         <a href="{{ route('petugas.pengembalian.verifikasi', $item->id) }}" 
                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-semibold transition inline-block">
                             <i class="fas fa-check-circle mr-1"></i> Verifikasi
@@ -64,7 +70,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="py-10 text-center text-gray-400">
+                    <td colspan="5" class="py-10 text-center text-gray-400">
                         <i class="fas fa-inbox text-4xl block mb-2 text-gray-300"></i>
                         Tidak ada pengembalian yang menunggu verifikasi.
                     </td>
@@ -74,9 +80,11 @@
         </table>
     </div>
 
-<!-- Pagination -->
-<div class="p-4 border-t border-gray-100 bg-gray-50/50 flex justify-center">
-    {{ $pengembalian->links() }}
-</div>
+    {{-- Pagination: di DALAM card, setelah tabel --}}
+    @if($pengembalian->hasPages())
+    <div class="p-4 border-t border-gray-100 bg-gray-50/50 flex justify-center">
+        {{ $pengembalian->links() }}
+    </div>
+    @endif
 </div>
 @endsection

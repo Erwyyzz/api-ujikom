@@ -9,6 +9,7 @@ use App\Models\Pengembalian;
 use App\Models\LogAktivitas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class PeminjamController extends Controller
@@ -18,6 +19,64 @@ class PeminjamController extends Controller
     {
         $alats = Alat::with('kategori')->where('stok', '>', 0)->get();
         return view('peminjam.dashboard', compact('alats'));
+    }
+    
+    //dashboarddddddddddddddddddddd
+    public function dashboard()
+    {
+        // ===== STATISTIK =====
+        $totalDiajukan = Peminjaman::where('user_id', auth()->id())
+            ->where('status', 'diajukan')
+            ->count();
+
+        $totalDipinjam = Peminjaman::where('user_id', auth()->id())
+            ->where('status', 'dipinjam')
+            ->count();
+
+        $totalDikembalikan = Peminjaman::where('user_id', auth()->id())
+            ->whereIn('status', ['dikembalikan', 'telat'])
+            ->count();
+
+        // ===== RIWAYAT AKTIF =====
+        $riwayat = Peminjaman::with(['detailPinjam.alat'])
+            ->where('user_id', auth()->id())
+            ->whereIn('status', ['diajukan', 'dipinjam', 'menunggu_verifikasi'])
+            ->latest()
+            ->get();
+
+        // ===== KATALOG ALAT =====
+        // Ambil SEMUA alat (termasuk yang stok habis)
+        $alats = Alat::with('kategori')->latest()->get();
+
+        // ===== PERINGATAN PENGEMBALIAN =====
+        $peminjamanAktif = Peminjaman::with(['detailPinjam.alat'])
+            ->where('user_id', auth()->id())
+            ->where('status', 'dipinjam')
+            ->get();
+
+        $peringatan = [];
+        foreach ($peminjamanAktif as $item) {
+            $tglKembaliPlan = Carbon::parse($item->tgl_kembali_plan)->startOfDay();
+            $hariIni = Carbon::now()->startOfDay();
+            $selisihHari = $hariIni->diffInDays($tglKembaliPlan, false);
+
+            $peringatan[] = [
+                'id' => $item->id,
+                'nama_alat' => $item->detailPinjam->first()->alat->nama_alat ?? 'Alat',
+                'tgl_kembali_plan' => $item->tgl_kembali_plan,
+                'selisih_hari' => $selisihHari,
+                'status' => $selisihHari < 0 ? 'telat' : ($selisihHari <= 3 ? 'segera' : 'aman'),
+            ];
+        }
+
+        $peringatan = array_filter($peringatan, function($p) {
+            return $p['status'] != 'aman';
+        });
+
+        return view('peminjam.dashboard', compact(
+            'totalDiajukan', 'totalDipinjam', 'totalDikembalikan',
+            'riwayat', 'alats', 'peringatan'
+        ));
     }
 
     // Form Ajukan Peminjaman
@@ -32,77 +91,93 @@ class PeminjamController extends Controller
         return view('peminjam.peminjaman.create', compact('alats', 'alat'));
     }
 
- // Store - Ajukan Peminjaman (Multi-Alat)
-public function storePeminjaman(Request $request)
-{
-    // Validasi input multi-alat
-    $request->validate([
-        'tgl_kembali_plan' => 'required|date|after:today',
-        'alat_id' => 'required|array|min:1',
-        'alat_id.*' => 'required|exists:alat,id',
-        'jumlah' => 'required|array|min:1',
-        'jumlah.*' => 'required|integer|min:1',
-        'keterangan' => 'nullable|array',
-        'keterangan.*' => 'nullable|string|max:255',
-    ], [
-        'tgl_kembali_plan.after' => 'Tanggal kembali harus setelah tanggal hari ini.',
-        'alat_id.required' => 'Minimal pilih 1 alat untuk dipinjam.',
-        'alat_id.min' => 'Minimal pilih 1 alat untuk dipinjam.',
-        'jumlah.*.min' => 'Jumlah minimal 1 unit.',
-    ]);
+    // Store - Ajukan Peminjaman (Multi-Alat)
+    public function storePeminjaman(Request $request)
+    {
+        // Validasi input multi-alat
+        $request->validate([
+            'tgl_kembali_plan' => 'required|date|after:today',
+            'alat_id' => 'required|array|min:1',
+            'alat_id.*' => 'required|exists:alat,id',
+            'jumlah' => 'required|array|min:1',
+            'jumlah.*' => 'required|integer|min:1',
+        ], [
+            'tgl_kembali_plan.after' => 'Tanggal kembali harus setelah tanggal hari ini.',
+            'alat_id.required' => 'Minimal pilih 1 alat untuk dipinjam.',
+            'alat_id.min' => 'Minimal pilih 1 alat untuk dipinjam.',
+            'jumlah.*.min' => 'Jumlah minimal 1 unit.',
+        ]);
 
-    DB::beginTransaction();
+        DB::beginTransaction();
 
-    try {
-        // Validasi stok SEMUA alat dulu sebelum simpan
-        $alatIds = $request->alat_id;
-        $jumlahs = $request->jumlah;
+        try {
+            // Validasi stok SEMUA alat dulu sebelum simpan
+            $alatIds = $request->alat_id;
+            $jumlahs = $request->jumlah;
 
-        foreach ($alatIds as $index => $alatId) {
-            $alat = Alat::findOrFail($alatId);
-            $jumlahPinjam = $jumlahs[$index];
+            foreach ($alatIds as $index => $alatId) {
+                $alat = Alat::findOrFail($alatId);
+                $jumlahPinjam = $jumlahs[$index];
 
-            if ($alat->stok < $jumlahPinjam) {
-                return back()
-                    ->withInput()
-                    ->with('error', 'Stok alat "' . $alat->nama_alat . '" tidak mencukupi! Stok tersedia: ' . $alat->stok . ' unit, Anda minta: ' . $jumlahPinjam . ' unit.');
+                if ($alat->stok < $jumlahPinjam) {
+                    return back()
+                        ->withInput()
+                        ->with('error', 'Stok alat "' . $alat->nama_alat . '" tidak mencukupi! Stok tersedia: ' . $alat->stok . ' unit, Anda minta: ' . $jumlahPinjam . ' unit.');
+                }
             }
-        }
 
-        // Simpan peminjaman (header)
-        $peminjaman = Peminjaman::create([
-            'user_id' => auth()->id(),
-            'tgl_pinjam' => now(),
-            'tgl_kembali_plan' => $request->tgl_kembali_plan,
-            'status' => 'diajukan',
-        ]);
-
-        // Simpan detail alat (bisa banyak)
-        foreach ($alatIds as $index => $alatId) {
-            DetailPinjam::create([
-                'peminjaman_id' => $peminjaman->id,
-                'alat_id' => $alatId,
-                'jumlah' => $jumlahs[$index],
-                'keterangan' => $request->keterangan[$index] ?? null,
+            // Simpan peminjaman (header)
+            $peminjaman = Peminjaman::create([
+                'user_id' => auth()->id(),
+                'tgl_pinjam' => now(),
+                'tgl_kembali_plan' => $request->tgl_kembali_plan,
+                'status' => 'diajukan',
             ]);
+
+            // Simpan detail alat (bisa banyak)
+            foreach ($alatIds as $index => $alatId) {
+                DetailPinjam::create([
+                    'peminjaman_id' => $peminjaman->id,
+                    'alat_id' => $alatId,
+                    'jumlah' => $jumlahs[$index],
+                ]);
+            }
+
+            // Catat log aktivitas
+            LogAktivitas::create([
+                'user_id' => auth()->id(),
+                'aktivitas' => 'Mengajukan peminjaman ' . count($alatIds) . ' alat (Peminjaman ID: ' . $peminjaman->id . ')',
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('peminjam.riwayat')
+                ->with('success', 'Peminjaman berhasil diajukan! Menunggu persetujuan petugas.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        // Catat log aktivitas
-        LogAktivitas::create([
-            'user_id' => auth()->id(),
-            'aktivitas' => 'Mengajukan peminjaman ' . count($alatIds) . ' alat (Peminjaman ID: ' . $peminjaman->id . ')',
-        ]);
-
-        DB::commit();
-
-        return redirect()->route('peminjam.riwayat')
-            ->with('success', 'Peminjaman berhasil diajukan! Menunggu persetujuan petugas.');
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        
     }
-}
+
+    // Halaman Riwayat Peminjaman
+    public function riwayatPeminjaman()
+    {
+
+        // Tandai menu Riwayat udah dibaca
+        Auth::user()->update(['riwayat_last_read_at' => now()]);
+
+        $riwayat = Peminjaman::with(['detailPinjam.alat', 'pengembalian'])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->paginate(10)
+            ->onEachSide(0)
+            ->withQueryString();
+
+        return view('peminjam.riwayat', compact('riwayat'));
+    }
+
     // Form Pengembalian
     public function createPengembalian($peminjaman_id)
     {
@@ -185,67 +260,12 @@ public function storePeminjaman(Request $request)
         }
     }
 
-    //dashboarddddddddddddddddddddd
-    public function dashboard()
-    {
-        // ===== STATISTIK =====
-        $totalDiajukan = Peminjaman::where('user_id', auth()->id())
-            ->where('status', 'diajukan')
-            ->count();
-
-        $totalDipinjam = Peminjaman::where('user_id', auth()->id())
-            ->where('status', 'dipinjam')
-            ->count();
-
-        $totalDikembalikan = Peminjaman::where('user_id', auth()->id())
-            ->whereIn('status', ['dikembalikan', 'telat'])
-            ->count();
-
-        // ===== RIWAYAT AKTIF =====
-        $riwayat = Peminjaman::with(['detailPinjam.alat'])
-            ->where('user_id', auth()->id())
-            ->whereIn('status', ['diajukan', 'dipinjam', 'menunggu_verifikasi'])
-            ->latest()
-            ->get();
-
-        // ===== KATALOG ALAT =====
-        // Ambil SEMUA alat (termasuk yang stok habis)
-        $alats = Alat::with('kategori')->latest()->get();
-
-        // ===== PERINGATAN PENGEMBALIAN =====
-        $peminjamanAktif = Peminjaman::with(['detailPinjam.alat'])
-            ->where('user_id', auth()->id())
-            ->where('status', 'dipinjam')
-            ->get();
-
-        $peringatan = [];
-        foreach ($peminjamanAktif as $item) {
-            $tglKembaliPlan = Carbon::parse($item->tgl_kembali_plan)->startOfDay();
-            $hariIni = Carbon::now()->startOfDay();
-            $selisihHari = $hariIni->diffInDays($tglKembaliPlan, false);
-
-            $peringatan[] = [
-                'id' => $item->id,
-                'nama_alat' => $item->detailPinjam->first()->alat->nama_alat ?? 'Alat',
-                'tgl_kembali_plan' => $item->tgl_kembali_plan,
-                'selisih_hari' => $selisihHari,
-                'status' => $selisihHari < 0 ? 'telat' : ($selisihHari <= 3 ? 'segera' : 'aman'),
-            ];
-        }
-
-        $peringatan = array_filter($peringatan, function($p) {
-            return $p['status'] != 'aman';
-        });
-
-        return view('peminjam.dashboard', compact(
-            'totalDiajukan', 'totalDipinjam', 'totalDikembalikan',
-            'riwayat', 'alats', 'peringatan'
-        ));
-    }
-
     // Index Pengembalian - Menampilkan alat yang sedang dipinjam
     public function indexPengembalian()
     {
+        // Tandai menu Pengembalian Alat udah dibaca
+        Auth::user()->update(['pengembalian_alat_last_read_at' => now()]);    
+
         $peminjaman = Peminjaman::with(['detailPinjam.alat'])
             ->where('user_id', auth()->id())
             ->where('status', 'dipinjam')

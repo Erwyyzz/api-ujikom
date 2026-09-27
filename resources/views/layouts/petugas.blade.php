@@ -82,13 +82,19 @@
             <a href="{{ route('petugas.peminjaman.index') }}" 
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 {{ request()->routeIs('petugas.peminjaman.*') ? 'active' : '' }}">
                 <i class="fas fa-hand-holding w-5 text-center text-lg"></i>
-                <span>Peminjaman</span>
+                <span class="flex-1">Peminjaman</span>
+                @if(($badgePeminjaman ?? 0) > 0)
+                    <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{{ $badgePeminjaman }}</span>
+                @endif
             </a>
-
+            
             <a href="{{ route('petugas.pengembalian.index') }}" 
                class="sidebar-link flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 {{ request()->routeIs('petugas.pengembalian.*') ? 'active' : '' }}">
                 <i class="fas fa-undo-alt w-5 text-center text-lg"></i>
-                <span>Pengembalian</span>
+                <span class="flex-1">Pengembalian</span>
+                @if(($badgePengembalian ?? 0) > 0)
+                    <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{{ $badgePengembalian }}</span>
+                @endif
             </a>
 
             <a href="{{ route('petugas.laporan') }}" 

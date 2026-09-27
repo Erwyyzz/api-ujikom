@@ -19,6 +19,12 @@ class User extends Authenticatable
         'no_hp',
         'alamat',
         'foto_profile',
+
+        //buat badge di menu peminjaman dan pengembalian (petugas) 
+        'peminjaman_last_read_at', 'pengembalian_last_read_at',
+
+        //buat badge di menu pengembalian alat dan riwayat (peminjam)
+        'pengembalian_alat_last_read_at', 'riwayat_last_read_at',
     ];
 
     protected $hidden = [
@@ -31,6 +37,14 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',     //laravel otomatis meng hash teks apapun yang masuk ke proprti password
+
+            //buat badge di menu peminjaman dan pengembalian (petugas)
+            'peminjaman_last_read_at' => 'datetime',     
+            'pengembalian_last_read_at' => 'datetime',  
+
+            //buat badge di menu pengembalian alat dan riwayat (peminjam)
+            'pengembalian_alat_last_read_at' => 'datetime', 
+            'riwayat_last_read_at' => 'datetime',   
         ];
     }
 

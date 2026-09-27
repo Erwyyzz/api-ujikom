@@ -89,23 +89,12 @@
                         </div>
                     </div>
 
-                    {{-- Jumlah & Keterangan --}}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {{-- Jumlah --}}
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-sort-numeric-up text-blue-500 mr-1"></i> Jumlah
-                            </label>
-                            <input type="number" name="jumlah[]" class="jumlah-input w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition bg-white" min="1" required placeholder="Contoh: 2">
-                        </div>
-
-                        {{-- Keterangan --}}
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-sticky-note text-blue-500 mr-1"></i> Keterangan (Opsional)
-                            </label>
-                            <input type="text" name="keterangan[]" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition bg-white" placeholder="Contoh: Untuk praktikum">
-                        </div>
+                    {{-- Jumlah --}}
+                    <div class="mb-3">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-sort-numeric-up text-blue-500 mr-1"></i> Jumlah
+                        </label>
+                        <input type="number" name="jumlah[]" class="jumlah-input w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition bg-white" min="1" required placeholder="Masukan jumlah alat yang di pinjam">
                     </div>
 
                     {{-- Info Stok Realtime --}}
@@ -206,9 +195,7 @@
 </style>
 
 <script>
-    // ============================================================
     // FUNGSI PILIH ALAT (Update info alat + validasi stok)
-    // ============================================================
     function pilihAlat(select) {
         const item = select.closest('.alat-item');
         const selectedOption = select.options[select.selectedIndex];
@@ -261,9 +248,7 @@
         cekStokRealtime(item);
     }
 
-    // ============================================================
     // FUNGSI CEK STOK REALTIME
-    // ============================================================
     function cekStokRealtime(item) {
         const jumlahInput = item.querySelector('.jumlah-input');
         const infoStok = item.querySelector('.info-stok-realtime');
@@ -295,9 +280,7 @@
         infoStok.classList.remove('hidden');
     }
 
-    // ============================================================
     // FUNGSI TAMBAH ALAT
-    // ============================================================
     function tambahAlat() {
         const container = document.getElementById('alatContainer');
         const items = container.querySelectorAll('.alat-item');
@@ -308,7 +291,6 @@
         // Reset value
         newItem.querySelector('.alat-select').value = '';
         newItem.querySelector('.jumlah-input').value = '';
-        newItem.querySelectorAll('input[type="text"]').forEach(el => el.value = '');
         newItem.querySelector('.info-alat').classList.add('hidden');
         newItem.querySelector('.info-stok-realtime').classList.add('hidden');
         
@@ -322,18 +304,14 @@
         updateTombolHapus();
     }
 
-    // ============================================================
     // FUNGSI HAPUS ALAT
-    // ============================================================
     function hapusAlat(btn) {
         const item = btn.closest('.alat-item');
         item.remove();
         updateTombolHapus();
     }
 
-    // ============================================================
     // UPDATE TOMBOL HAPUS (Kalo cuma 1 alat, sembunyikan)
-    // ============================================================
     function updateTombolHapus() {
         const items = document.querySelectorAll('.alat-item');
         const btnHapusList = document.querySelectorAll('.btn-hapus-alat');
@@ -347,9 +325,7 @@
         }
     }
 
-    // ============================================================
     // MODAL KONFIRMASI
-    // ============================================================
     function showKonfirmasiModal() {
         // Ambil semua alat yang dipilih
         const items = document.querySelectorAll('.alat-item');
@@ -405,9 +381,7 @@
         document.getElementById('formPeminjaman').submit();
     }
 
-    // ============================================================
     // INIT: Kalo ada alat yang udah kepilih dari URL
-    // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
         const selects = document.querySelectorAll('.alat-select');
         selects.forEach(select => {
